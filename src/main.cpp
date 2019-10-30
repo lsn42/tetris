@@ -1,8 +1,8 @@
 #include <cstdio>
-#include "display/main.h"
+#include <iostream>
+#include <string>
+#include "gui/main.h"
 main()
 {
-    func();
-    printf("hello main!");
-    getchar();
+    
 }

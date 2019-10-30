@@ -1,13 +1,14 @@
-#include <brick.h>
-class game
+#include <Brick.h>
+class Game
 {
 private:
-    bool map[10][20];
+    bool map[10][20] = {0};
     int score;
-    brick next;
+    Brick CurrentBrick, NextBrick;
 public:
-    game()
+    Game()
     {
-
+        this->score = 0;
+        
     }
 };

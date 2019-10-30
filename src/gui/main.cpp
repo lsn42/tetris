@@ -2,7 +2,9 @@
 #include <iostream>
 #include <conio.h>
 #include "main.h"
-void func()
+#include "src/game/main.h"
+
+void display(Game game)
 {
-    printf("hello display!");
+    
 }
