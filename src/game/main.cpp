@@ -1,14 +1,29 @@
-#include <Brick.h>
-class Game
+#include <cstring>
+#include "Brick.h"
+#include "main.h"
+Game::Game()
 {
-private:
-    bool map[10][20] = {0};
-    int score;
-    Brick CurrentBrick, NextBrick;
-public:
-    Game()
-    {
-        this->score = 0;
-        
-    }
-};
+    this->Score = 0;
+    this->Difficulty = 0;
+    memset(this->Map, 0, sizeof(this->Map));
+}
+bool Game::GetMapValue(int row, int column)
+{
+    return this->Map[row][column];
+}
+int Game::GetScore()
+{
+    return this->Score;
+}
+int Game::GetDifficulty()
+{
+    return this->Difficulty;
+}
+Brick Game::GetCurrentBrick()
+{
+    return this->CurrentBrick;
+}
+Brick Game::GetNextBrick()
+{
+    return this->NextBrick;
+}

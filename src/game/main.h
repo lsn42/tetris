@@ -4,10 +4,16 @@
 class Game
 {
 private:
-    bool map[10][20];
-    int score;
+    bool Map[20][10];
+    int Score;
+    int Difficulty;
     Brick CurrentBrick, NextBrick;
 public:
     Game();
+    bool GetMapValue(int row, int column);
+    int GetScore();
+    int GetDifficulty();
+    Brick GetCurrentBrick();
+    Brick GetNextBrick();
 };
 #endif

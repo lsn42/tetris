@@ -1,17 +1,24 @@
 #include <cstdlib>
-class Brick
+#include <cstring>
+#include "Brick.h"
+Brick::Brick()
 {
-private:
-    int type;
-    int position[2];
-    int diretion;
-    bool shape[4][4];
-public:
-    Brick()
-    {
-        this->type = rand() % 7;
-        switch(this->type)
-        {
-        }
-    }
-};
+    this->Type = rand() % 7;
+    memcpy(this->Shape, this->ShapeLibrary[this->Type], 25);
+}
+int Brick::GetType()
+{
+    return this->Type;
+}
+int* Brick::GetPosition()
+{
+    return this->Position;
+}
+int Brick::GetDirection()
+{
+    return this->Diretion;
+}
+bool Brick::GetShapeValue(int row, int column)
+{
+    return this->Shape[row][column];
+}

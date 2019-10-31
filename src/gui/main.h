@@ -1,4 +1,5 @@
-#ifndef DISPLAY_MAIN_H
-#define DISPLAY_MAIN_H
-void func();
+#ifndef GUI_MAIN_H
+#define GUI_MAIN_H
+#include "../game/main.h"
+void display(Game game);
 #endif
