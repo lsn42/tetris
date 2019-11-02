@@ -22,3 +22,16 @@ bool Brick::GetShapeValue(int row, int column)
 {
     return this->Shape[row][column];
 }
+void Brick::Rotate(bool clockwise)
+{
+    bool NextShape[5][5];
+    if(clockwise)
+        for(int i = 0; i < 5; ++i)
+            for(int j = 0; j < 5; ++j)
+                NextShape[j][4-i] = Shape[i][j];
+    else
+        for(int i = 0; i < 5; ++i)
+            for(int j = 0; j < 5; ++j)
+                NextShape[j-4][i] = Shape[i][j];
+    memcpy(this->Shape, NextShape, sizeof(this->Shape));
+}

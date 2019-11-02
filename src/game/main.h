@@ -7,13 +7,13 @@ private:
     bool Map[20][10];
     int Score;
     int Difficulty;
-    Brick CurrentBrick, NextBrick;
+    Brick *CurrentBrick, *NextBrick;
 public:
     Game();
     bool GetMapValue(int row, int column);
     int GetScore();
     int GetDifficulty();
-    Brick GetCurrentBrick();
-    Brick GetNextBrick();
+    Brick* GetCurrentBrick();
+    Brick* GetNextBrick();
 };
 #endif

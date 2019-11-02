@@ -42,7 +42,7 @@ void display(Game game)
         printf("#  #");
         for(int j = 0; j < 5; ++j)
         {
-            if(game.GetNextBrick().GetShapeValue(i-2, j))
+            if(game.GetNextBrick()->GetShapeValue(i-2, j))
                 printf("@");
             else
                 printf(" ");
@@ -80,5 +80,5 @@ void display(Game game)
         printf("\n");
     }
     //22
-    printf("############");
+    printf("############\n");
 }
