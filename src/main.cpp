@@ -9,8 +9,5 @@ main()
 {
     Game* game = new Game();
     SetConsoleTitleA((LPCSTR)"TETRIS");
-    display(*game);
-    game->GetNextBrick()->Rotate(true);
-    display(*game);
     getchar();
 }

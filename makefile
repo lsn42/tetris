@@ -4,8 +4,7 @@ BUILD_DIR = ./build
 OBJ_DIR = $(BUILD_DIR)/obj
 TARGET = $(BUILD_DIR)/main.exe
 
-SRCS = $(SRC_DIR)/main.cpp $(SRC_DIR)/gui/main.cpp $(SRC_DIR)/game/main.cpp $(SRC_DIR)/game/brick.cpp
-OBJS = $(OBJ_DIR)/main.obj $(OBJ_DIR)/gui/main.obj $(OBJ_DIR)/game/main.obj $(OBJ_DIR)/game/brick.obj
+OBJS = $(OBJ_DIR)/main.obj $(OBJ_DIR)/gui/output.obj $(OBJ_DIR)/gui/input.obj $(OBJ_DIR)/game/main.obj $(OBJ_DIR)/game/brick.obj
 
 $(TARGET): $(OBJS)
 	-@md "$(@D)"
@@ -15,7 +14,11 @@ $(OBJ_DIR)/main.obj: $(SRC_DIR)/main.cpp
 	-@md "$(@D)"
 	$(CC) -c $^ -o $@
 
-$(OBJ_DIR)/gui/main.obj: $(SRC_DIR)/gui/main.cpp
+$(OBJ_DIR)/gui/output.obj: $(SRC_DIR)/gui/output.cpp
+	-@md "$(@D)"
+	$(CC) -c $^ -o $@
+
+$(OBJ_DIR)/gui/input.obj: $(SRC_DIR)/gui/input.cpp
 	-@md "$(@D)"
 	$(CC) -c $^ -o $@
 

@@ -8,33 +8,9 @@ Game::Game()
     this->Difficulty = 0;
     CurrentBrick = new Brick();
     NextBrick = new Brick();
-    for(int i = 0; i < 5; ++i)
-    {
-        for(int j = 0; j < 5; ++j)
-        {
-            if(this->CurrentBrick->GetShapeValue(i,j))
-                printf("1");
-            else
-                printf("0");
-        }
-        printf("\n");
-    }
-    printf("\n");
-    for(int i = 0; i < 5; ++i)
-    {
-        for(int j = 0; j < 5; ++j)
-        {
-            if(this->NextBrick->GetShapeValue(i,j))
-                printf("1");
-            else
-                printf("0");
-        }
-        printf("\n");
-    }
-    printf("\n");
     memset(this->Map, 0, sizeof(this->Map));
 }
-bool Game::GetMapValue(int row, int column)
+int Game::GetMapValue(int row, int column)
 {
     return this->Map[row][column];
 }
@@ -53,4 +29,8 @@ Brick* Game::GetCurrentBrick()
 Brick* Game::GetNextBrick()
 {
     return this->NextBrick;
+}
+void Game::CleanRow(int row)
+{
+
 }
