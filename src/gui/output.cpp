@@ -3,26 +3,14 @@
 #include "../game/main.h"
 HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
-HANDLE hOutBuf = CreateConsoleScreenBuffer(
-        GENERIC_READ | GENERIC_WRITE, 
-        FILE_SHARE_READ | FILE_SHARE_WRITE, 
-        NULL, 
-        CONSOLE_TEXTMODE_BUFFER, 
-        NULL
-    );
-
 const COORD START = {0, 0};
 const COORD END = {22, 21};
 void Init()
 {
     CONSOLE_CURSOR_INFO cci;
-    SetConsoleActiveScreenBuffer(hOutBuf);
     cci.bVisible=0;
     cci.dwSize=1;
     SetConsoleCursorInfo(hOutput, &cci);
-    SetConsoleCursorInfo(hOutBuf, &cci);
-    DWORD bytes=0;
-    char data[800];
 }
 void DisplayFramework()
 {
@@ -119,8 +107,8 @@ void DisplayCurrentBrick(Game game)
     {
         for(int j = 0; j < 5; ++j)
         {
-            coord.X = 1 + (game.GetCurrentBrick()->GetPosition()[0] + j) * 2;
-            coord.Y = 1 + game.GetCurrentBrick()->GetPosition()[1] + i;
+            coord.X = 1 + (game.GetCurrentBrick()->GetPosition()[0] + j - 2) * 2;
+            coord.Y = 1 + game.GetCurrentBrick()->GetPosition()[1] + i - 2;
             SetConsoleCursorPosition(hOutput, coord);
             if(game.GetCurrentBrick()->GetShapeValue(i, j))
                 printf("#");

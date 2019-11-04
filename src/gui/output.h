@@ -1,6 +1,7 @@
 #ifndef GUI_OUTPUT_H
 #define GUI_OUTPUT_H
 #include "../game/main.h"
+void Init();
 void DisplayFramework();
 void DisplayColorfulTitle(int x, int y);
 void DisplayCurrentMap(Game game);

@@ -8,7 +8,8 @@
 #include "game/main.h"
 main()
 {
-    Game game = *(new Game());
+    //system("Tetris.mid");
+    Init();
     DisplayFramework();
     GameInitiate();
     while(true)
@@ -16,8 +17,10 @@ main()
         int listen = Listen();
         if(listen == 1)
         {
-            int rate = 1;
-            int speed = 300;
+            newgame:
+            Game game = *(new Game());
+            int count = 10 - game.GetDifficulty() > 0 ? 10 - game.GetDifficulty() : 0;
+            int speed = 100;
             DisplayFramework();
             DisplayColorfulTitle(26,20);
             while(true)
@@ -56,13 +59,38 @@ main()
                     game.BrickHorizontalMove(true);
                 else if(listen == 6)
                     game.BrickFastDescend();
-                if(game.BrickDescend())
-                    printf("position : %d %d", game.GetCurrentBrick()->GetPosition()[0], game.GetCurrentBrick()->GetPosition()[1]);
-                else
+                if(count == 0)
                 {
-                    game.PlaceCurrentBrick();
-                    game.Next();
+                    if(game.BrickDescend())
+                        printf("%d, %d, %d", game.GetCurrentBrick()->GetPosition()[0], game.GetCurrentBrick()->GetPosition()[1], game.GetCurrentBrick()->GetDirection());
+                    else
+                    {
+                        game.PlaceCurrentBrick();
+                        while(game.isAnyClearableRow())
+                        {
+                            game.ClearRow(game.isAnyClearableRow());
+                        }
+                        if(game.Next());
+                        else
+                        {
+                            GameOver(game.GetScore());
+                            while(true)
+                            {
+                                listen = Listen();
+                                if(listen == 1)
+                                {
+                                    DisplayFramework();
+                                    GameInitiate();
+                                    Sleep(1000);
+                                    goto newgame;
+                                }
+                            }
+                        }
+                    }
+                    count = 10 - game.GetDifficulty() > 0 ? 10 - game.GetDifficulty() : 0;
                 }
+                else
+                    --count;
                 Sleep(speed);
             }
         }

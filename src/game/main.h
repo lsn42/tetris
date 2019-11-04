@@ -26,7 +26,7 @@ public:
     int GetDifficulty();
     Brick* GetCurrentBrick();
     Brick* GetNextBrick();
-    void Next();
+    bool Next();
     int isAnyClearableRow();
     void ClearRow(int row);
     bool isValid(Brick& brick);

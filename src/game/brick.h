@@ -61,8 +61,8 @@ public:
     int GetType();
     int* GetPosition();
     int GetDirection();
-    void Move(int x, int y);
     bool GetShapeValue(int row, int column);
+    void Move(int x, int y);
     void Rotate(bool clockwise);
 };
 #endif
