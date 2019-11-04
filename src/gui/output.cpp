@@ -1,52 +1,75 @@
 #include <windows.h>
 #include <cstdio>
-#include "src/game/main.h"
-HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
-HANDLE input = GetStdHandle(STD_INPUT_HANDLE);
-void DisplayFramwork()
+#include "../game/main.h"
+HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
+HANDLE hOutBuf = CreateConsoleScreenBuffer(
+        GENERIC_READ | GENERIC_WRITE, 
+        FILE_SHARE_READ | FILE_SHARE_WRITE, 
+        NULL, 
+        CONSOLE_TEXTMODE_BUFFER, 
+        NULL
+    );
+
+const COORD START = {0, 0};
+const COORD END = {22, 21};
+void Init()
 {
-    printf("----------------------  ---------------\n");
-    printf("|                    |  | Next:       |\n");
-    printf("|                    |  |             |\n");
-    printf("|                    |  |             |\n");
-    printf("|                    |  |             |\n");
-    printf("|                    |  |             |\n");
-    printf("|                    |  |             |\n");
-    printf("|                    |  |             |\n");
-    printf("|                    |  ---------------\n");
-    printf("|                    |                 \n");
-    printf("|                    |  ---------------\n");
-    printf("|                    |  | Difficulty: |\n");
-    printf("|                    |  |             |\n");
-    printf("|                    |  ---------------\n");
-    printf("|                    |                 \n");
-    printf("|                    |  ---------------\n");
-    printf("|                    |  | Score:      |\n");
-    printf("|                    |  |             |\n");
-    printf("|                    |  ---------------\n");
-    printf("|                    |                 \n");
-    printf("|                    |                 \n");
-    printf("----------------------                 \n");
+    CONSOLE_CURSOR_INFO cci;
+    SetConsoleActiveScreenBuffer(hOutBuf);
+    cci.bVisible=0;
+    cci.dwSize=1;
+    SetConsoleCursorInfo(hOutput, &cci);
+    SetConsoleCursorInfo(hOutBuf, &cci);
+    DWORD bytes=0;
+    char data[800];
 }
-void DisplayColorfulTitle()
+void DisplayFramework()
+{
+    SetConsoleCursorPosition(hOutput, START);
+    printf("---------------------  ---------------\n");
+    printf("|                   |  | Next:       |\n");
+    printf("|                   |  |             |\n");
+    printf("|                   |  |             |\n");
+    printf("|                   |  |             |\n");
+    printf("|                   |  |             |\n");
+    printf("|                   |  |             |\n");
+    printf("|                   |  |             |\n");
+    printf("|                   |  ---------------\n");
+    printf("|                   |                 \n");
+    printf("|                   |  ---------------\n");
+    printf("|                   |  | Difficulty: |\n");
+    printf("|                   |  |             |\n");
+    printf("|                   |  ---------------\n");
+    printf("|                   |                 \n");
+    printf("|                   |  ---------------\n");
+    printf("|                   |  | Score:      |\n");
+    printf("|                   |  |             |\n");
+    printf("|                   |  ---------------\n");
+    printf("|                   |                 \n");
+    printf("|                   |                 \n");
+    printf("---------------------                 \n");
+}
+void DisplayColorfulTitle(int x, int y)
 {
     COORD coord = {0};
-    coord.X = 26;
-    coord.Y = 20;
-    SetConsoleCursorPosition(output, coord);
-    SetConsoleTextAttribute(output, 0x0c);
+    coord.X = x;
+    coord.Y = y;
+    SetConsoleCursorPosition(hOutput, coord);
+    SetConsoleTextAttribute(hOutput, 0x0c);
     printf("T ");
-    SetConsoleTextAttribute(output, 0x0e);
+    SetConsoleTextAttribute(hOutput, 0x0e);
     printf("E ");
-    SetConsoleTextAttribute(output, 0x0c);
+    SetConsoleTextAttribute(hOutput, 0x0c);
     printf("T ");
-    SetConsoleTextAttribute(output, 0x0a);
+    SetConsoleTextAttribute(hOutput, 0x0a);
     printf("R ");
-    SetConsoleTextAttribute(output, 0x09);
+    SetConsoleTextAttribute(hOutput, 0x09);
     printf("I ");
-    SetConsoleTextAttribute(output, 0x0d);
+    SetConsoleTextAttribute(hOutput, 0x0d);
     printf("S");
-    SetConsoleTextAttribute(output, 0x0f);
+    SetConsoleTextAttribute(hOutput, 0x0f);
+    SetConsoleCursorPosition(hOutput, END);
 }
 void DisplayCurrentMap(Game game)
 {
@@ -58,88 +81,198 @@ void DisplayCurrentMap(Game game)
             int value = game.GetMapValue(i, j);
             coord.X = 1 + j * 2;
             coord.Y = 1 + i;
-            SetConsoleCursorPosition(output, coord);
+            SetConsoleCursorPosition(hOutput, coord);
             if(value)
             {
                 if(value == 1)
-                    SetConsoleTextAttribute(output, 0x0c);//red
+                    SetConsoleTextAttribute(hOutput, 0x0c);//red
                 else if(value == 2)
-                    SetConsoleTextAttribute(output, 0x0e);//yellow
+                    SetConsoleTextAttribute(hOutput, 0x0e);//yellow
                 else if(value == 3)
-                    SetConsoleTextAttribute(output, 0x0a);//green
+                    SetConsoleTextAttribute(hOutput, 0x0a);//green
                 else if(value == 4)
-                    SetConsoleTextAttribute(output, 0x09);//blue
+                    SetConsoleTextAttribute(hOutput, 0x09);//blue
                 else if(value == 5)
-                    SetConsoleTextAttribute(output, 0x0d);//purple
+                    SetConsoleTextAttribute(hOutput, 0x0d);//purple
                 printf("#");
             }
-            SetConsoleTextAttribute(output, 0x0f);
         }
     }
+    SetConsoleTextAttribute(hOutput, 0x0f);
+    SetConsoleCursorPosition(hOutput, END);
 }
 void DisplayCurrentBrick(Game game)
 {
     COORD coord = {0};
-    int type = game.GetNextBrick()->GetType();
+    int type = game.GetCurrentBrick()->GetType();
     if(type == 0)
-        SetConsoleTextAttribute(output, 0x0c);
+        SetConsoleTextAttribute(hOutput, 0x0c);
     else if(type == 1 || type == 2)
-        SetConsoleTextAttribute(output, 0x0e);
+        SetConsoleTextAttribute(hOutput, 0x0e);
     else if(type == 3 || type == 4)
-        SetConsoleTextAttribute(output, 0x0a);
+        SetConsoleTextAttribute(hOutput, 0x0a);
     else if(type == 5)
-        SetConsoleTextAttribute(output, 0x09);
+        SetConsoleTextAttribute(hOutput, 0x09);
     else if(type == 6)
-        SetConsoleTextAttribute(output, 0x0d);
+        SetConsoleTextAttribute(hOutput, 0x0d);
     for(int i = 0; i < 5; ++i)
     {
         for(int j = 0; j < 5; ++j)
         {
-            coord.X = 1 + j * 2;
-            coord.Y = 1 + i;
-            SetConsoleCursorPosition(output, coord);
-            if(game.GetNextBrick()->GetShapeValue(i, j))
+            coord.X = 1 + (game.GetCurrentBrick()->GetPosition()[0] + j) * 2;
+            coord.Y = 1 + game.GetCurrentBrick()->GetPosition()[1] + i;
+            SetConsoleCursorPosition(hOutput, coord);
+            if(game.GetCurrentBrick()->GetShapeValue(i, j))
                 printf("#");
         }
     }
-    SetConsoleTextAttribute(output, 0x0f);
+    SetConsoleTextAttribute(hOutput, 0x0f);
+    SetConsoleCursorPosition(hOutput, END);
 }
 void DisplayNextBrick(Game game)
 {
     COORD coord = {0};
     int type = game.GetNextBrick()->GetType();
     if(type == 0)
-        SetConsoleTextAttribute(output, 0x0c);
+        SetConsoleTextAttribute(hOutput, 0x0c);
     else if(type == 1 || type == 2)
-        SetConsoleTextAttribute(output, 0x0e);
+        SetConsoleTextAttribute(hOutput, 0x0e);
     else if(type == 3 || type == 4)
-        SetConsoleTextAttribute(output, 0x0a);
+        SetConsoleTextAttribute(hOutput, 0x0a);
     else if(type == 5)
-        SetConsoleTextAttribute(output, 0x09);
+        SetConsoleTextAttribute(hOutput, 0x09);
     else if(type == 6)
-        SetConsoleTextAttribute(output, 0x0d);
+        SetConsoleTextAttribute(hOutput, 0x0d);
     for(int i = 0; i < 5; ++i)
     {
         for(int j = 0; j < 5; ++j)
         {
-            coord.X = 26 + j * 2;
+            coord.X = 25 + j * 2;
             coord.Y = 3 + i;
-            SetConsoleCursorPosition(output, coord);
+            SetConsoleCursorPosition(hOutput, coord);
             if(game.GetNextBrick()->GetShapeValue(i, j))
                 printf("#");
         }
     }
-    SetConsoleTextAttribute(output, 0x0f);
+    SetConsoleTextAttribute(hOutput, 0x0f);
+    SetConsoleCursorPosition(hOutput, END);
 }
 void DisplayInfo(Game game)
 {
     COORD coord = {0};
-    coord.X = 26;
+    coord.X = 25;
     coord.Y = 12;
-    SetConsoleCursorPosition(output, coord);
+    SetConsoleCursorPosition(hOutput, coord);
     printf("%11d", game.GetDifficulty());
-    coord.X = 26;
+    coord.X = 25;
     coord.Y = 17;
-    SetConsoleCursorPosition(output, coord);
+    SetConsoleCursorPosition(hOutput, coord);
     printf("%11d", game.GetScore());
+    SetConsoleCursorPosition(hOutput, END);
+}
+void ClearMap()
+{
+    COORD coord = {0};
+    for(int i = 0; i < 20 ; ++i)
+    {
+        coord.X = 1;
+        coord.Y = 1 + i;
+        SetConsoleCursorPosition(hOutput, coord);
+        printf("                   ");
+    }
+    SetConsoleCursorPosition(hOutput, END);
+}
+void ClearNextBrick()
+{
+    COORD coord = {0};
+    for(int i = 0; i < 6 ; ++i)
+    {
+        coord.X = 24;
+        coord.Y = 2 + i;
+        SetConsoleCursorPosition(hOutput, coord);
+        printf("             ");
+    }
+    SetConsoleCursorPosition(hOutput, END);
+}
+void GameInitiate()
+{
+    COORD coord = {0};
+    coord.X = 4;
+    coord.Y = 6;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("--------------------------------");
+    coord.Y = 7;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("|                              |");
+    coord.Y = 8;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("|                              |");
+    coord.Y = 9;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("|                              |");
+    coord.Y = 10;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("|    Press <Enter> to start    |");
+    coord.Y = 11;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("|     Press <Esc> to exit      |");
+    coord.Y = 12;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("--------------------------------");
+    DisplayColorfulTitle(14, 8);
+    SetConsoleCursorPosition(hOutput, END);
+}
+void GamePause()
+{
+    COORD coord = {0};
+    coord.X = 4;
+    coord.Y = 6;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("--------------------------------");
+    coord.Y = 7;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("|          G  a  m  e          |");
+    coord.Y = 8;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("|       P  a  u  s  e  d       |");
+    coord.Y = 9;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("|                              |");
+    coord.Y = 10;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("|   Press <Enter> to continue  |");
+    coord.Y = 11;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("|     Press <Esc> to exit      |");
+    coord.Y = 12;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("--------------------------------");
+    SetConsoleCursorPosition(hOutput, END);
+}
+void GameOver(int score)
+{
+    COORD coord = {0};
+    coord.X = 4;
+    coord.Y = 6;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("--------------------------------");
+    coord.Y = 7;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("|          G  a  m  e          |");
+    coord.Y = 8;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("|          O  v  e  r          |");
+    coord.Y = 9;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("|    Your score:%11d    |", score);
+    coord.Y = 10;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("|                              |");
+    coord.Y = 11;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("|   Press <Enter> to continue  |");
+    coord.Y = 12;
+    SetConsoleCursorPosition(hOutput, coord);
+    printf("--------------------------------");
+    SetConsoleCursorPosition(hOutput, END);
 }
