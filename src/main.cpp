@@ -3,15 +3,14 @@
 #include <string>
 #include <windows.h>
 #include <conio.h>
-#include "gui/output.h"
-#include "gui/input.h"
+#include "gameio.h"
 #include "game/main.h"
 main()
 {
     //system("Tetris.mid");
-    Init();
+    HideCursor();
     DisplayFramework();
-    GameInitiate();
+    GameStart();
     while(true)
     {
         int listen = Listen();
@@ -61,8 +60,7 @@ main()
                     game.BrickFastDescend();
                 if(count == 0)
                 {
-                    if(game.BrickDescend())
-                        printf("%d, %d, %d", game.GetCurrentBrick()->GetPosition()[0], game.GetCurrentBrick()->GetPosition()[1], game.GetCurrentBrick()->GetDirection());
+                    if(game.BrickDescend());
                     else
                     {
                         game.PlaceCurrentBrick();
@@ -80,7 +78,7 @@ main()
                                 if(listen == 1)
                                 {
                                     DisplayFramework();
-                                    GameInitiate();
+                                    GameStart();
                                     Sleep(1000);
                                     goto newgame;
                                 }
