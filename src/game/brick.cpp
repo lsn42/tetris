@@ -16,6 +16,7 @@ Brick::Brick()
     memcpy(this->Shape, ShapeLibrary[this->Type], 25);
     //get shape form library
 }
+// value getter
 int Brick::GetType()
 {
     return this->Type;
@@ -30,18 +31,20 @@ int Brick::GetDirection()
 {
     return this->Diretion;
 }
-void Brick::Move(int x, int y)
-{
-    this->Position[0] += x;
-    this->Position[1] += y;
-}
 bool Brick::GetShapeValue(int row, int column)
 {
     return this->Shape[row][column];
 }
+void Brick::Move(int x, int y)
+{
+    // change brick position
+    this->Position[0] += x;
+    this->Position[1] += y;
+}
 void Brick::Rotate(bool clockwise)
 {
-    if(this->Type != 6)
+    // rotate the shape, change direction
+    if(this->Type != 6)// the square won't rotate
     {
         bool NextShape[5][5];
         if(clockwise)//clockwise

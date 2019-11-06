@@ -1,6 +1,6 @@
 #include <windows.h>
 #include <cstdio>
-#include "game/main.h"
+#include "game/game.h"
 #define KEYDOWN(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0) 
 HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
@@ -8,25 +8,27 @@ const COORD START = {0, 0};
 const COORD END = {22, 21};
 int Listen()
 {
-    if(KEYDOWN(VK_ESCAPE))
+    // listen key state
+    if(KEYDOWN(VK_ESCAPE))// Esc
         return -1;
-    else if(KEYDOWN(VK_RETURN))
+    else if(KEYDOWN(VK_RETURN))// Enter
         return 1;
-    else if(KEYDOWN(0x57) || KEYDOWN(VK_UP))
+    else if(KEYDOWN(0x57) || KEYDOWN(VK_UP))// W or ↑
         return 2;
-    else if(KEYDOWN(0x41) || KEYDOWN(VK_LEFT))
+    else if(KEYDOWN(0x41) || KEYDOWN(VK_LEFT))// A or ←
         return 3;
-    else if(KEYDOWN(0x53) || KEYDOWN(VK_DOWN))
+    else if(KEYDOWN(0x53) || KEYDOWN(VK_DOWN))// S or ↓
         return 4;
-    else if(KEYDOWN(0x44) || KEYDOWN(VK_RIGHT))
+    else if(KEYDOWN(0x44) || KEYDOWN(VK_RIGHT))// D or →
         return 5;
-    else if(KEYDOWN(VK_SPACE))
+    else if(KEYDOWN(VK_SPACE))// Space
         return 6;
-    else
+    else// neither
         return 0;
 }
 void HideCursor()
 {
+    // hide console cursor
     CONSOLE_CURSOR_INFO cci;
     cci.bVisible=0;
     cci.dwSize=1;
@@ -34,7 +36,8 @@ void HideCursor()
 }
 void DisplayFramework()
 {
-    SetConsoleCursorPosition(hOutput, START);
+    // show the tetris game framework
+    SetConsoleCursorPosition(hOutput, START);// move cursor to the start
     printf("---------------------  ---------------\n");
     printf("|                   |  | Next:       |\n");
     printf("|                   |  |             |\n");
@@ -60,6 +63,7 @@ void DisplayFramework()
 }
 void DisplayColorfulTitle(int x, int y)
 {
+    // show the colorful text "T E T R I S" in console of position (x, y)
     COORD coord = {0};
     coord.X = x;
     coord.Y = y;
@@ -77,10 +81,11 @@ void DisplayColorfulTitle(int x, int y)
     SetConsoleTextAttribute(hOutput, 0x0d);
     printf("S");
     SetConsoleTextAttribute(hOutput, 0x0f);
-    SetConsoleCursorPosition(hOutput, END);
+    SetConsoleCursorPosition(hOutput, END);// move cursor to the end
 }
 void DisplayCurrentMap(Game game)
 {
+    // print map of the game with color, value 0 won't display
     COORD coord = {0};
     for(int i = 0; i < 20; ++i)
     {
@@ -107,22 +112,23 @@ void DisplayCurrentMap(Game game)
         }
     }
     SetConsoleTextAttribute(hOutput, 0x0f);
-    SetConsoleCursorPosition(hOutput, END);
+    SetConsoleCursorPosition(hOutput, END);// move cursor to the end
 }
 void DisplayCurrentBrick(Game game)
 {
+    // display current operating brick according to its type, position and diretion
     COORD coord = {0};
-    int type = game.GetCurrentBrick()->GetType();
+    int type = game.GetCurrentBrick()->GetType();//get brick type for color
     if(type == 0)
-        SetConsoleTextAttribute(hOutput, 0x0c);
+        SetConsoleTextAttribute(hOutput, 0x0c);// red
     else if(type == 1 || type == 2)
-        SetConsoleTextAttribute(hOutput, 0x0e);
+        SetConsoleTextAttribute(hOutput, 0x0e);// yellow
     else if(type == 3 || type == 4)
-        SetConsoleTextAttribute(hOutput, 0x0a);
+        SetConsoleTextAttribute(hOutput, 0x0a);// green
     else if(type == 5)
-        SetConsoleTextAttribute(hOutput, 0x09);
+        SetConsoleTextAttribute(hOutput, 0x09);// blue
     else if(type == 6)
-        SetConsoleTextAttribute(hOutput, 0x0d);
+        SetConsoleTextAttribute(hOutput, 0x0d);// purple
     for(int i = 0; i < 5; ++i)
     {
         for(int j = 0; j < 5; ++j)
@@ -130,27 +136,29 @@ void DisplayCurrentBrick(Game game)
             coord.X = 1 + (game.GetCurrentBrick()->GetPosition()[0] + j - 2) * 2;
             coord.Y = 1 + game.GetCurrentBrick()->GetPosition()[1] + i - 2;
             SetConsoleCursorPosition(hOutput, coord);
+            // move cusor
             if(game.GetCurrentBrick()->GetShapeValue(i, j))
                 printf("#");
         }
     }
-    SetConsoleTextAttribute(hOutput, 0x0f);
-    SetConsoleCursorPosition(hOutput, END);
+    SetConsoleTextAttribute(hOutput, 0x0f);// set color to white
+    SetConsoleCursorPosition(hOutput, END);// move cursor to the end
 }
 void DisplayNextBrick(Game game)
 {
+    // display next brick in specific position according to its type and diretion
     COORD coord = {0};
     int type = game.GetNextBrick()->GetType();
     if(type == 0)
-        SetConsoleTextAttribute(hOutput, 0x0c);
+        SetConsoleTextAttribute(hOutput, 0x0c);// red
     else if(type == 1 || type == 2)
-        SetConsoleTextAttribute(hOutput, 0x0e);
+        SetConsoleTextAttribute(hOutput, 0x0e);// yellow
     else if(type == 3 || type == 4)
-        SetConsoleTextAttribute(hOutput, 0x0a);
+        SetConsoleTextAttribute(hOutput, 0x0a);// green
     else if(type == 5)
-        SetConsoleTextAttribute(hOutput, 0x09);
+        SetConsoleTextAttribute(hOutput, 0x09);// blue
     else if(type == 6)
-        SetConsoleTextAttribute(hOutput, 0x0d);
+        SetConsoleTextAttribute(hOutput, 0x0d);// purple
     for(int i = 0; i < 5; ++i)
     {
         for(int j = 0; j < 5; ++j)
@@ -158,15 +166,17 @@ void DisplayNextBrick(Game game)
             coord.X = 25 + j * 2;
             coord.Y = 3 + i;
             SetConsoleCursorPosition(hOutput, coord);
+            // move cusor
             if(game.GetNextBrick()->GetShapeValue(i, j))
                 printf("#");
         }
     }
-    SetConsoleTextAttribute(hOutput, 0x0f);
-    SetConsoleCursorPosition(hOutput, END);
+    SetConsoleTextAttribute(hOutput, 0x0f);// set color to white
+    SetConsoleCursorPosition(hOutput, END);// move cursor to the end
 }
 void DisplayInfo(Game game)
 {
+    // display game difficulty and score in specific position
     COORD coord = {0};
     coord.X = 25;
     coord.Y = 12;
@@ -180,6 +190,7 @@ void DisplayInfo(Game game)
 }
 void ClearMap()
 {
+    // clear the game map area in console
     COORD coord = {0};
     for(int i = 0; i < 20 ; ++i)
     {
@@ -188,10 +199,11 @@ void ClearMap()
         SetConsoleCursorPosition(hOutput, coord);
         printf("                   ");
     }
-    SetConsoleCursorPosition(hOutput, END);
+    SetConsoleCursorPosition(hOutput, END);// move cursor to the end
 }
 void ClearNextBrick()
 {
+    // clear the next brick area in console
     COORD coord = {0};
     for(int i = 0; i < 6 ; ++i)
     {
@@ -200,10 +212,11 @@ void ClearNextBrick()
         SetConsoleCursorPosition(hOutput, coord);
         printf("             ");
     }
-    SetConsoleCursorPosition(hOutput, END);
+    SetConsoleCursorPosition(hOutput, END);// move cursor to the end
 }
 void GameStart()
 {
+    // show the tetris game start window
     COORD coord = {0};
     coord.X = 4;
     coord.Y = 6;
@@ -232,6 +245,7 @@ void GameStart()
 }
 void GamePause()
 {
+    // show the tetris game pause window
     COORD coord = {0};
     coord.X = 4;
     coord.Y = 6;
@@ -259,6 +273,7 @@ void GamePause()
 }
 void GameOver(int score)
 {
+    // show the tetris game over window with score
     COORD coord = {0};
     coord.X = 4;
     coord.Y = 6;
