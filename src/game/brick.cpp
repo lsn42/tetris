@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include <cstring>
-#include "Brick.h"
+#include "brick.h"
 Brick::Brick()
 {
     this->Type = rand() % 7;

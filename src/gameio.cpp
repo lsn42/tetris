@@ -30,8 +30,8 @@ void HideCursor()
 {
     // hide console cursor
     CONSOLE_CURSOR_INFO cci;
-    cci.bVisible=0;
-    cci.dwSize=1;
+    cci.bVisible = 0;
+    cci.dwSize = 1;
     SetConsoleCursorInfo(hOutput, &cci);
 }
 void DisplayFramework()

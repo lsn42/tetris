@@ -1,8 +1,8 @@
-CC = g++ -g
+CC = g++
 SRC_DIR = ./src
 BUILD_DIR = ./build
 OBJ_DIR = $(BUILD_DIR)/obj
-TARGET = $(BUILD_DIR)/main.exe
+TARGET = $(BUILD_DIR)/tetris.exe
 
 OBJS = $(OBJ_DIR)/main.obj $(OBJ_DIR)/gameio.obj $(OBJ_DIR)/game/game.obj $(OBJ_DIR)/game/brick.obj
 

@@ -8,12 +8,12 @@ int main()
     // display game interface
     DisplayFramework();
     GameStart();
-    while(true)// main loop
+    while(true) // main loop
     {
         // main menu
         main:
         int listen = Listen();
-        if(listen == 1 || listen == 6)// press enter or space
+        if(listen == 1 || listen == 6) // press enter or space
         {
             // start a new game
             newgame:
@@ -21,17 +21,16 @@ int main()
             // would the brick self descend in this frame, 0 represent yes, other represent no, depend on game difficulty
             int count = 10 - game.GetDifficulty() > 0 ? 10 - game.GetDifficulty() : 0;
             DisplayFramework();
-            DisplayColorfulTitle(26,20);
+            DisplayColorfulTitle(25,20);
+            DisplayNextBrick(game);
+            DisplayInfo(game);
             while(true)// game loop
             {
                 ClearMap();
-                ClearNextBrick();
                 DisplayCurrentMap(game);
-                DisplayCurrentBrick(game);
-                DisplayNextBrick(game);
-                DisplayInfo(game);
-                listen = Listen();// listen to operation
-                if(listen == -1)// press Esc, game pause
+                DisplayCurrentBrick(game); // refreshing map
+                listen = Listen(); // listen to operation
+                if(listen == -1) // press Esc, game pause
                 {
                     GamePause();
                     Sleep(500);
@@ -44,47 +43,52 @@ int main()
                         else if(listen == 1 || listen == 6)// press enter or space
                         {
                             DisplayFramework();
-                            DisplayColorfulTitle(26,20);
+                            DisplayColorfulTitle(25,20);
                             break;
                         }
                     }
                 }
-                else if(listen == 2)// press W or ↑, rotate
+                else if(listen == 2) // press W or ↑, rotate
                     game.BrickRotate();
-                else if(listen == 3)// press A or ←, go left
+                else if(listen == 3) // press A or ←, go left
                     game.BrickHorizontalMove(false);
-                else if(listen == 4)// press S or ↓, descend
+                else if(listen == 4) // press S or ↓, descend
                     game.BrickDescend();
-                else if(listen == 5)// press D or →, go right
+                else if(listen == 5) // press D or →, go right
                     game.BrickHorizontalMove(true);
-                else if(listen == 6)// press space, fast descend
+                else if(listen == 6) // press space, fast descend
                     game.BrickFastDescend();
-                if(count == 0)// the brick should self descend
+                if(count == 0) // the brick should self descend
                 {
                     // current brick self descend in this frame
                     // self descend
-                    if(game.BrickDescend());// self descend successful
+                    if(game.BrickDescend()); // self descend successful
                     else
                     {
                         // self descend unsuccessful, fix current brick
                         game.PlaceCurrentBrick();
-                        while(game.isAnyClearableRow())// check if any clearable row, if so, clear them
+                        while(game.isAnyClearableRow()) // check if any clearable row, if so, clear them
                         {
                             game.ClearRow(game.isAnyClearableRow());
                         }
                         // get next state
-                        if(game.Next());// turn to next state successful
+                        if(game.Next())
+                        {
+                            // turn to next state successful
+                            ClearNextBrick();
+                            DisplayNextBrick(game);
+                        }
                         else
                         {
                             //trun to next state unsuccessful, game map is full, game over!
                             GameOver(game.GetScore());
-                            while(true)// game over confirm loop
+                            while(true) // game over confirm loop
                             {
                                 listen = Listen();
-                                if(listen == -1)// press Esc
+                                if(listen == -1) // press Esc
                                     // end the game
                                     goto end;
-                                else if(listen == 1 || listen == 6)// press enter or space
+                                else if(listen == 1 || listen == 6) // press enter or space
                                 {
                                     // restart game, display game interface and go to the main loop
                                     Sleep(500);
@@ -94,6 +98,7 @@ int main()
                                 }
                             }
                         }
+                        DisplayInfo(game);
                     }
                     // recalculate the count
                     count = 10 - game.GetDifficulty() > 0 ? 10 - game.GetDifficulty() : 0;
@@ -103,7 +108,7 @@ int main()
                 Sleep(displayrate);
             }
         }
-        else if(listen == -1)// press Esc
+        else if(listen == -1) // press Esc
             // end the game
             break;
     }

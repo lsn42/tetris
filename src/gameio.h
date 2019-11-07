@@ -1,5 +1,5 @@
-#ifndef IO_H
-#define IO_H
+#ifndef GAMEIO_H
+#define GAMEIO_H
 #include "game/game.h"
 // listen key state
 int Listen();

@@ -1,9 +1,12 @@
+#include <cstdlib>
+#include <ctime>
 #include <cstring>
 #include <cstdio>
-#include "Brick.h"
+#include "brick.h"
 #include "game.h"
 Game::Game()
 {
+    srand((int)(time(NULL)));
     this->Score = 0;
     // clean 1 row get 100 points
     this->Difficulty = 0;
