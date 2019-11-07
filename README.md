@@ -1,6 +1,7 @@
 # 俄罗斯方块
 ## 图片
-![游戏开始](https://github.com/lsn42/tetris/blob/master/image/game_start.png)![游戏中](https://github.com/lsn42/tetris/blob/master/image/gaming.png)![游戏结束](https://github.com/lsn42/tetris/blob/master/image/game_over.png)
+![游戏开始](https://github.com/lsn42/tetris/blob/master/image/game_start.png)
+![游戏中](https://github.com/lsn42/tetris/blob/master/image/gaming.png)![游戏结束](https://github.com/lsn42/tetris/blob/master/image/game_over.png)
 ## 编译
 1. 执行`make`
 1. 生成可执行文件在`/build/tetris.exe`
